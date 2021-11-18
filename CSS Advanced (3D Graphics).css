@@ -1,0 +1,100 @@
+/*
+SUMMARY OF TERMS: perspective, perspective-origin, transform-style, transform-origin
+*/
+
+/*
+1. BASICS: Creation of the planes and setting of the stage for a 3D cube 
+		   KEYWORDS: PERSPECTIVE, PERSPECTIVE-ORIGIN
+		   a. 6 pieces of the cube has to be created, represented by 6 <span> elements which are contained in a cube <div> and
+		      then a stage <div>. <div> or <figure> can be used too. Refer to HTML file.
+		   b. <div class="stage"> represents a stage where everything is placed & <div class="cube"> represents the cube on the stage.
+		   c. <div class="stage"> is an element to act as a stage where it is given depth using the CSS PERSPECTIVE property.
+		   d. Set the design of each plane
+*/
+  .stage { /*From Point C*/
+	  width: 300px;
+	  height: 300px;
+	  margin: auto; /*To position the stage towards the middle of the page*/
+	  margin-top: 150px; /*To position the stage better*/
+	  perspective: 1600px; 
+	  /*
+	  PERSPECTIVE defines how far away the object is from the user.
+	  A higher perspective value gives a more subtle 3D effect, a lower value makes it more pronounced
+	  Only the child elements get the perspective view, not the element itself (.stage in this case)
+	  A value of 800 pixels or so tends to look good for most small objects, but if you're creating something larger, 
+	  such as a skyscraper, you may want to use a smaller value to create more extreme angles.
+	  */
+	  perspective-origin: 50% -240px;
+	  /*
+	  PERSPECTIVE-ORIGIN defines at from which position the user is looking at the 3D-positioned element
+	  Only the child element get the perspective-origin effect, not the element itself (.stage in this case)
+	  MUST be used in conjunction with PERPSPECTIVE
+	  SYNATX: perspective-origin: x-axis y-axis
+	  x-axis reprsents where the view is placed on the x-axis (same for y-axis); default value is 50%
+	  Possible values for x-axis: %, length, left, right, center; Possible values for y-axis: %, length, top, bottom, center 
+	  */
+  }
+  div.stage div.cube span { /*From Point D*/
+	display: block;
+	position: absolute; /*Stacks all of the 6 planes together instead of having them separate out into 6 different planes*/
+	width: 300px;
+	height: 300px;
+	background-color: rgba(128,128,0,0.4);
+	border: 2px solid black;
+	text-align: center;
+    line-height: 300px;
+	font-size: 50px;
+  }
+
+/*
+2. TRANSFORMATIONS: As an extension from the 3D transformation section from 12. CSS Advanced, concepts of skew, rotate, scale, translate and
+					rotate will be highlighted.
+					This section will let the 6 planes undergo 3D transformations, allowing a 3D cube to form
+					KEYWORDS: TRANSFORM-STYLE, TRANSFORM-ORIGIN
+*/ 
+  div.cube {
+	  transform-style: preserve-3d; 
+	  /*
+	  Specifies that child elements will preserve its 3D position, whereby each <span> element representing each cube side
+	  will carry out transformations in their own 3D space.
+	  */
+	  /*Rotates the entire cube to better see the 3D effect*/
+  }
+  div.stage div.cube span {
+	  transform-origin: 50% 50% 0; /*Default value for the property*/
+	  /*
+	  TRANSFORM-ORIGIN property sets a point in the X, Y and Z axes that acts as a centre of rotation. 
+	  This is the middle of the front of the element, halfway across and halfway down, which is the centre of each plane in this case.
+	  */
+  }
+  div.stage div.cube span.front {transform: translateZ(150px);} 
+  /*1. Front plane is translated 150px outwards along the z-axis first*/
+  div.stage div.cube span.back {transform: rotateY(180deg) translateZ(150px);}
+  /*
+  2. Back plane flips 180 degrees and moves 150px along z-axis towards to back. The translation is positive in this case as the 
+     its front face is facing towards the back of the stage after the rotation in the y-axis.
+	 IMPORTANT:  The order of the transform rules matters. If an item is rotated, its Z axis will be at a different angle and 
+				 any translation will be affected.
+  */
+  div.stage div.cube span.top {transform: rotateX(90deg) translateZ(150px);}
+  /*
+  3. Top plane is rotated along its x-axis and faces upwards. Its Z-axis is along the line from the top to bottom. 
+	 Hence to move the plane to the top, translateZ will be used. Same concept is utilised for the other planes.
+  */
+  div.stage div.cube span.bottom {transform: rotateX(-90deg) translateZ(150px);}
+  div.stage div.cube span.left {transform: rotateY(-90deg) translateZ(150px);}
+  div.stage div.cube span.right {transform: rotateY(90deg) translateZ(150px);}
+  
+  
+/*3. SPECIAL EFFECTS: Effects such as rotations in 3D spaces using keyframes and animations can be used to enhance the visual effects*/ 
+  @keyframes rotate1 {
+    0% {transform: rotateY(0);}
+    100% {transform: rotateY(360deg);}
+  }
+  .cube { 
+    animation: rotate1 10s infinite linear; 
+  }
+  span {
+  -webkit-box-reflect: below 0 -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(RGBA(0, 0, 0, 0.1)));
+  }
+  /*More of such effects can be learnt in Chapter 14*/ 
